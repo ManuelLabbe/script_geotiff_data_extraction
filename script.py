@@ -30,28 +30,26 @@ def tif_extraccion(archivos: list, latlon: pd.DataFrame):
     avance = 0
     total = len(archivos)
     for archivo in tqdm(archivos, desc='Archivos'):
-        carga = avance / total
+        #carga = avance / total
         #print(f'Avance de {carga*100}%')
-        dataset = rasterio.open(archivo)
-        nombre = archivo.split('/')[1]
-        valores = []
-        for i in tqdm(range(len(latlon)), desc='Coordenadas', leave=False):
-            x = latlon.Longitud.iloc[i]
-            y = latlon.Latitud.iloc[i]
-            #print(f'Coordenadas: {x}, {y}')
-            x_, y_ = dataset.index(x,y)
-            banda = dataset.read(1)
-            #valor= np.nan
-            try:
+        with rasterio.open(archivo) as dataset:
+            nombre = archivo.split('/')[1]
+            valores = []
+            for i in tqdm(range(len(latlon)), desc='Coordenadas', leave=False):
+                x = latlon.Longitud.iloc[i]
+                y = latlon.Latitud.iloc[i]
+                #print(f'Coordenadas: {x}, {y}')
+                x_, y_ = dataset.index(x,y)
+                banda = dataset.read(1)
+                #valor= np.nan
+
                 valor = banda[x_,y_]
                 #print(f'valor: {valor}')
                 if np.isnan(valor):
-                    #print('dentro de if')
+                        #print('dentro de if')
                     valor = nan_latlon(dataset=dataset, x=x, y=y)
-                    #print(f'Valor post nan_latlon(): {valor}')
-            except Exception as e:
-                valor = nan_latlon(dataset=dataset, x=x, y=y)
-                #print(f'valor except: {valor}')
+                        #print(f'Valor post nan_latlon(): {valor}')
+                    #print(f'valor except: {valor}')
             valores.append(valor)
         df[nombre] = valores
         avance += 1
@@ -71,21 +69,19 @@ def nan_latlon(dataset, x: float , y: float):
     # x -= 0 , y -= 1
     # x -= 1 , y -= 1
     arrs = [
-        [(0.001,.0), (0.001,0.001), (.0,0.001), (-0.001,.0), (-0.001,-0.001), (.0,-0.001)]
+        (0.001,.0), (0.001,0.001), (.0,0.001), (-0.001,.0), (-0.001,-0.001), (.0,-0.001)
     ]
-    for arr in arrs:
-        for (py, px) in arr:
-            x_ = x + px
-            y_ = y + py
-            #print(x_, y_)
-            x__, y__ = dataset.index(x_,y_)
-            banda = dataset.read(1)
-            try:
-                valor = banda[x__,y__]
-                if not np.isnan(valor):
-                    return valor
-            except:
-                continue
+    for (py, px) in arrs:
+        x_ = x + px
+        y_ = y + py
+        #print(x_, y_)
+        x__, y__ = dataset.index(x_,y_)
+        banda = dataset.read(1)
+
+        valor = banda[x__,y__]
+        if not np.isnan(valor):
+            return valor
+
     return np.nan
 
 if __name__ == '__main__':
