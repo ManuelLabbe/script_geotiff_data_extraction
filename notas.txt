@@ -1,0 +1,4 @@
+1. Inspección de la base de datos EDA (CORR MATRIX) Creación de mapas
+2. Preprocesado de los datos. ¿Cómo se procesan? ¿Normalizar? ¿Depurar?
+3. Aplicar tecnologías de predicción (validation/test) etc...
+4. Resultados

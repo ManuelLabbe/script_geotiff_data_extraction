@@ -9,7 +9,8 @@ path_rosetta_mean = r'ROSETTA_MEAN'
 path_rosetta_sd = r'ROSETTA_SD'
 path_SoilMaps_mean = r'SoilMaps_MEAN'
 path_Textural_Classes = r'Textural_Classes'
-all_paths = [path_PIRange, path_rosetta_mean, path_rosetta_sd, path_SoilMaps_mean, path_Textural_Classes]
+#all_paths = [path_PIRange, path_rosetta_mean, path_rosetta_sd, path_SoilMaps_mean, path_Textural_Classes]
+all_paths = [path_Textural_Classes]
 
 def archivos_extraccion(paths):
     archivos = []
@@ -90,4 +91,4 @@ if __name__ == '__main__':
     archivos = archivos_extraccion(all_paths)
     df = pd.read_csv('raw_data_0_01')
     new_col = tif_extraccion(archivos=archivos,latlon=df)
-    new_col.to_csv('tif_data_nan_function_0_01')
+    new_col.to_csv('textural_classes_original')
