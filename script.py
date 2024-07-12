@@ -9,8 +9,8 @@ path_rosetta_mean = r'ROSETTA_MEAN'
 path_rosetta_sd = r'ROSETTA_SD'
 path_SoilMaps_mean = r'SoilMaps_MEAN'
 path_Textural_Classes = r'Textural_Classes'
-#all_paths = [path_PIRange, path_rosetta_mean, path_rosetta_sd, path_SoilMaps_mean, path_Textural_Classes]
-all_paths = [path_Textural_Classes]
+all_paths = [path_PIRange, path_rosetta_mean, path_rosetta_sd, path_SoilMaps_mean, path_Textural_Classes]
+#all_paths = [all_paths]
 
 def archivos_extraccion(paths):
     archivos = []
@@ -49,7 +49,7 @@ def tif_extraccion(archivos: list, latlon: pd.DataFrame):
                             #print('dentro de if')
                         valor = nan_latlon(dataset=dataset, x=x, y=y)
                 except:
-                    continue
+                    valor = np.nan
                         #print(f'Valor post nan_latlon(): {valor}')
                     #print(f'valor except: {valor}')
                 valores.append(valor)
@@ -70,7 +70,7 @@ def nan_latlon(dataset, x: float , y: float):
     # x -= 0 , y -= 1
     # x -= 1 , y -= 1
     arrs = [
-        (0.001,.0), (0.001,0.001), (.0,0.001), (-0.001,.0), (-0.001,-0.001), (.0,-0.001)
+        (0.001,.0), (0.001,0.001), (.0,0.001), (-0.001,.0), (-0.001,-0.001), (.0,-0.001), (0.001,-0.001), (-0.001,0.001)
     ]
     for (py, px) in arrs:
         x_ = x + px
@@ -89,6 +89,6 @@ def nan_latlon(dataset, x: float , y: float):
 
 if __name__ == '__main__':
     archivos = archivos_extraccion(all_paths)
-    df = pd.read_csv('raw_data_0_01')
+    df = pd.read_csv('raw_data_0_2')
     new_col = tif_extraccion(archivos=archivos,latlon=df)
-    new_col.to_csv('textural_classes_original')
+    new_col.to_csv('tif_data_0_2')
